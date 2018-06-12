@@ -1,0 +1,5 @@
+---
+docker_compose_path: /usr/local/bin/docker-compose
+docker_compose_url: https://github.com/docker/compose/releases/download/1.21.2/
+wordpress_repo_url: https://github.com/ndemoor/docker-wordpress-workflow-demo.git
+wordpress_repo_dest: /home/ec2-user/docker-wordpress-workflow-demo

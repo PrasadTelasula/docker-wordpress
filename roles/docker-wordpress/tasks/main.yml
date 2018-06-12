@@ -1,0 +1,63 @@
+---
+- name: Install Docker
+  yum:
+     name: docker
+     state: latest
+
+- name: Start & Enable Docker
+  service:
+     name: docker
+     state: started
+     enabled: yes
+
+- name: Add user to docker group 
+  user:
+     name: "{{ ansible_user }}"
+     groups: docker
+     append: yes
+
+- name: Ensure Docker Compose Installed or not 
+  stat:
+     path: "{{ docker_compose_path }}"
+  register: compose_install
+
+- name: Install Docker Compose
+  shell: sudo curl -L {{ docker_compose_url }}docker-compose-$(uname -s)-$(uname -m) -o {{ docker_compose_path }}
+  when: compose_install.stat.exists == false
+
+- name: Make Docker Compose as executable
+  file:
+     path: "{{ docker_compose_path }}"
+     mode: "u+x,g+x,o+x"
+
+- name: Check the Docker Compose Version
+  command: docker-compose --version
+  become_user: "{{ ansible_user }}"
+  register: compose
+
+- debug: var=compose.stdout_lines
+
+- name: Install git
+  yum:
+     name: git
+     state: latest 
+
+- name: clone wordpress repository
+  git:
+     repo: "{{ wordpress_repo_url }}"
+     dest: "{{ wordpress_repo_dest }}"
+
+- name: Launch Wordpress Container
+  become_user: "{{ ansible_user }}"
+  command: docker-compose up -d
+  args:
+      chdir: "{{ wordpress_repo_dest }}/"
+
+- name: Check Containers
+  become_user: "{{ ansible_user }}"
+  command: docker ps
+  register: docker_ls
+
+- debug: var=docker_ls.stdout_lines
+  
+  
