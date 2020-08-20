@@ -1,0 +1,78 @@
+docker version
+
+docker version --format '{{.Server.Version}}'
+
+docker version --format '{{json .}}'
+
+##############
+docker run hello-world
+
+docker ps
+
+docker ps -a
+##############
+
+
+##############
+# Docker Create
+docker create -t -i ubuntu bash
+
+# Docker Start
+docker start CONTAINER
+##############
+
+##############
+# Docker Rename
+ docker rename CONTAINER NEW_NAME
+##############
+
+# Docker restart
+docker restart CONTAINER
+
+# Dokcer pause
+docker pause CONTAINER
+docker attach container_name
+
+# Docker un-pause
+docker unpause container_name
+docker attach container_name
+
+# Docker wait
+docker wait container_name
+docker stop container_name
+
+# Docker kill
+docker kill my_container
+docker kill --signal=SIGHUP  my_container
+kill -l
+
+# Docker stop
+docker stop CONTAINER
+
+# Docker remove
+docker rm CONTAINER
+
+
+# Docker run
+docker run -i -t --name centos_container centos /bin/bash
+docker run -a stdin -a stdout -i -t ubuntu /bin/bash
+docker run -a stderr -i -t ubuntu /bin/bash
+
+docker run -i -t -d --name centos_container centos /bin/bash
+
+###########
+# PID
+docker run -it --rm --pid=host alpine sh
+    apk add --update htop
+    htop
+    top
+###########
+
+###########
+# UTS (UNIX Time-Sharing) namespaces allow a single system to appear to have different host and domain names to different processes.
+docker run -it --name centos_container --hostname=centos.docker.local centos /bin/bash
+    hostname
+
+hostname
+docker run -it --name centos_container --uts=host centos /bin/bash
+    hostname
